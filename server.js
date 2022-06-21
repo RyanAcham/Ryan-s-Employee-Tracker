@@ -3,9 +3,11 @@ const inquirer = require('inquirer');
 const consoleTable = require('console.table');
 const util = require('util');
 
+const PORT = process.env.PORT || 3001;
+const app = express();
+
 let conn = mysql.createConnection({
-    host: 'localhost',
-    port: '3306',
+    host: 'localhost', 
     user: 'root',
     password: '',
     database: 'employ_db'
@@ -52,6 +54,36 @@ const userQuery = async () => {
         case 'Add Roles':
             addRole();
             break;
+        case 'Update Roles':
+            upRole();
+            break;
     };
 }
 
+const viewEmp = async () => {
+
+}
+
+const viewDep = async () => {
+
+}
+
+const viewRole = async () => {
+
+}
+
+const addEmp = async () => {
+
+}
+
+const addDep = async () => {
+
+}
+
+const addRole = async () => {
+
+}
+
+const upRole = async () => {
+
+}
