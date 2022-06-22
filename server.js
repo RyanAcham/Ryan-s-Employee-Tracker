@@ -63,7 +63,7 @@ const userQuery = async () => {
 const viewEmp = async () => {
     console.log('VIEW ALL EMPLOYEES')
     let query = 'SELECT * FROM employee';
-    connection.query(query, function (err, res) {
+    conn.query(query, function (err, res) {
         if (err) throw err;
         let employeeArray = [];
         res.forEach(employee => employeeArray.push(employee));
@@ -75,7 +75,7 @@ const viewEmp = async () => {
 const viewDep = async () => {
     console.log('VIEW ALL DEPEARTMENTS')
     let query = 'SELECT * FROM dept';
-    connection.query(query, function (err, res) {
+    conn.query(query, function (err, res) {
         if (err) throw err;
         let deptArray = [];
         res.forEach(dept => deptArray.push(dept));
@@ -87,7 +87,7 @@ const viewDep = async () => {
 const viewRole = async () => {
     console.log('VIEW ALL ROLES')
     let query = 'SELECT * FROM role';
-    connection.query(query, function (err, res) {
+    conn.query(query, function (err, res) {
         if (err) throw err;
         let roleArray = [];
         res.forEach(role => roleArray.push(role));
@@ -97,11 +97,74 @@ const viewRole = async () => {
 }
 
 const addEmp = async () => {
+        console.log('ADD EMPLOYEE');
 
+        let roles = await conn.query("SELECT * FROM role");
+
+        let managers = await conn.query("SELECT * FROM employee");
+
+        let answer = await inquirer.prompt([
+            {
+                name: 'firstName',
+                type: 'input',
+                message: 'First Name?'
+            },
+            {
+                name: 'lastName',
+                type: 'input',
+                message: 'Last Name?'
+            },
+            {
+                name: 'employeeRoleId',
+                type: 'list',
+                choices: roles.map((role) => {
+                    return {
+                        name: role.title,
+                        value: role.id
+                    }
+                }),
+                message: "Role id?"
+            },
+            {
+                name: 'employeeManagerId',
+                type: 'list',
+                choices: managers.map((manager) => {
+                    return {
+                        name: manager.first_name + " " + manager.last_name,
+                        value: manager.id
+                    }
+                }),
+                message: "What is this Employee's Manager's Id?"
+            }
+        ])
+
+        let result = await conn.query("INSERT INTO employee SET ?", {
+            first_name: answer.firstName,
+            last_name: answer.lastName,
+            role_id: (answer.employeeRoleId),
+            manager_id: (answer.employeeManagerId)
+        });
+
+        console.log(`${answer.firstName} ${answer.lastName} added successfully.\n`);
 }
 
 const addDep = async () => {
+    console.log('ADD DEPT');
 
+    let answer = await inquirer.prompt([
+        {
+            name: 'deptName',
+            type: 'input',
+            message: 'New department name?'
+        }
+    ]);
+
+    let result = await conn.query("INSERT INTO department SET ?", {
+        department_name: answer.deptName
+    });
+
+    console.log(`${answer.deptName} added successfully to departments.\n`)
+    initialAction();
 }
 
 const addRole = async () => {
