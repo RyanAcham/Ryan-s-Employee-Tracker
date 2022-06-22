@@ -15,7 +15,7 @@ let conn = mysql.createConnection({
 
 conn.query = util.promisify(conn.query);
 
-conn.connect(function err {
+conn.connect(function (err) {
     if (err) throw err;
     userQuery();
 })
@@ -61,15 +61,39 @@ const userQuery = async () => {
 }
 
 const viewEmp = async () => {
-
+    console.log('VIEW ALL EMPLOYEES')
+    let query = 'SELECT * FROM employee';
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        let employeeArray = [];
+        res.forEach(employee => employeeArray.push(employee));
+        console.table(employeeArray);
+        userQuery();
+    });
 }
 
 const viewDep = async () => {
-
+    console.log('VIEW ALL DEPEARTMENTS')
+    let query = 'SELECT * FROM dept';
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        let deptArray = [];
+        res.forEach(dept => deptArray.push(dept));
+        console.table(deptArray);
+        userQuery();
+    });
 }
 
 const viewRole = async () => {
-
+    console.log('VIEW ALL ROLES')
+    let query = 'SELECT * FROM role';
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        let roleArray = [];
+        res.forEach(role => roleArray.push(role));
+        console.table(roleArray);
+        userQuery();
+    });
 }
 
 const addEmp = async () => {
